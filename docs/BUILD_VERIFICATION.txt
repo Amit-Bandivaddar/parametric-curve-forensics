@@ -1,0 +1,15 @@
+Build verification note
+------------------------
+The project files were generated successfully.
+
+The execution environment used to prepare this package does not expose Maven as an
+executable, so Maven compilation could not be run here. The project is configured
+for Java 17+ and Maven 3.8+ and should be compiled locally with:
+
+    mvn -q clean compile
+
+Then run the sample with:
+
+    mvn -q exec:java -Dexec.mainClass=com.curveforensics.Main -Dexec.args="sample-data/xy_data_sample.csv"
+
+Do not treat the sample data as the official assignment data.
