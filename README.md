@@ -189,6 +189,22 @@ Final theta, M, X
 L1 / RMSE / maximum-error validation
 ```
 
+
+## Sample Visualization
+
+The repository includes a visualization generated from the included synthetic
+development dataset:
+
+![Sample parametric curve](docs/sample-curve.png)
+
+**Important:** this is a development/demo visualization only. It is not the
+official assignment result because the official `xy_data.csv` was not available
+when this repository was prepared.
+
+Once the official dataset is available, the same workflow can be used to
+generate the final fitted-curve visualization and compare it against the
+provided observations.
+
 ## 10. Desmos visualization
 
 The assignment provides a Desmos representation of the curve.
