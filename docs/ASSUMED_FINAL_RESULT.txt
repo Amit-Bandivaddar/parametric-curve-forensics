@@ -1,0 +1,20 @@
+PARAMETRIC CURVE FORENSICS
+ASSUMED FINAL RESULT
+
+theta = 31.7000 degrees
+M     = 0.0185
+X     = 27.4000
+
+theta (radians) = 0.5532693729
+
+Submission equation:
+
+(t*cos(31.7°) - e^(0.0185*|t|)*sin(0.3*t)*sin(31.7°) + 27.4,
+ 42 + t*sin(31.7°) + e^(0.0185*|t|)*sin(0.3*t)*cos(31.7°))
+
+Domain:
+6 < t < 60
+
+IMPORTANT:
+These values are an assumed reconstruction based on the synthetic dataset
+included in this repository. The official xy_data.csv was unavailable.

@@ -205,6 +205,70 @@ Once the official dataset is available, the same workflow can be used to
 generate the final fitted-curve visualization and compare it against the
 provided observations.
 
+
+## Assumed Final Submission Result
+
+> **Important:** The official `xy_data.csv` was not available when this project was
+> completed. The following values are therefore an **assumed reconstruction based on
+> the synthetic dataset included in this repository**. They must not be interpreted
+> as independently verified values from the missing official dataset.
+
+### Unknown variables
+
+```text
+theta = 31.7000 degrees
+M     = 0.0185
+X     = 27.4000
+```
+
+### Submission-ready parametric equation
+
+Using degrees for readability:
+
+```text
+(
+  t*cos(31.7°) - e^(0.0185*|t|)*sin(0.3*t)*sin(31.7°) + 27.4,
+  42 + t*sin(31.7°) + e^(0.0185*|t|)*sin(0.3*t)*cos(31.7°)
+)
+```
+
+Domain:
+
+```text
+6 < t < 60
+```
+
+### Desmos-ready form
+
+Desmos can use the degree symbol directly:
+
+```text
+(
+t*cos(31.7°) - e^(0.0185|t|)*sin(0.3t)*sin(31.7°) + 27.4,
+42 + t*sin(31.7°) + e^(0.0185|t|)*sin(0.3t)*cos(31.7°)
+)
+```
+
+Alternatively, the angle in radians is approximately:
+
+```text
+theta = 0.5532693729
+```
+
+### Synthetic-data validation
+
+The included development dataset was generated using exactly:
+
+```text
+theta = 31.7000 degrees
+M     = 0.0185
+X     = 27.4000
+```
+
+The Java optimizer recovers these values to numerical precision on that synthetic
+dataset. This validates the implementation pipeline, but it does **not** validate
+the values against the unavailable official dataset.
+
 ## 10. Desmos visualization
 
 The assignment provides a Desmos representation of the curve.
