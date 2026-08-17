@@ -60,8 +60,9 @@ public final class Main {
         Parameters best = nm.optimize(global, objective::evaluate, 10000);
 
         double l1 = objective.evaluate(best);
-        double rmse = Metrics.rmse(points, objective.getTValues(), best);
-        double maxError = Metrics.maxAbs(points, objective.getTValues(), best);
+        double[] inferredT = objective.getTValues(best);
+        double rmse = Metrics.rmse(points, inferredT, best);
+        double maxError = Metrics.maxAbs(points, inferredT, best);
 
         System.out.println();
         System.out.println("=============== FINAL RESULT ================");
