@@ -281,7 +281,7 @@ and the domain:
 The repository visualization is stored as:
 
 ```text
-docs/sample_curve.png
+docs/sample_curve.jpeg
 ```
 
 This image represents the recovered curve using the official dataset result.
@@ -295,7 +295,7 @@ parametric-curve-forensics/
 ├── sample-data/
 │   └── xy_data_sample.csv             # development/demo dataset
 ├── docs/
-│   ├── sample_curve.png               # recovered official curve visualization
+│   ├── sample_curve.jpeg               # recovered official curve visualization
 │   ├── assignment-reference.pdf
 │   ├── BUILD_VERIFICATION.txt
 │   ├── FINAL_RESULTS_TEMPLATE.md
