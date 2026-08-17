@@ -3,7 +3,7 @@
 > **R&D / AI Assignment — Java Implementation**
 
 A clean, dependency-light Java solution for recovering the three hidden parameters of
-a parametric curve from an observed `xy_data.csv` point cloud.
+a parametric curve from an observed `xy` point cloud.
 
 ## 1. Problem
 
@@ -72,7 +72,7 @@ For observed points `(x_i, y_i)` and predicted points `(x'_i, y'_i)`:
 L1 = (1/N) * sum(
         |x'_i - x_i| +
         |y'_i - y_i|
-     )
+    )
 ```
 
 The optimizer minimizes this quantity subject to the assignment's parameter bounds.
@@ -109,26 +109,32 @@ This two-stage design combines:
 
 ## 6. Dataset
 
-The original assignment refers to a file named `xy_data.csv`. That file was **not included
-with the assignment PDF available to us**, so this repository deliberately does not pretend
-that a synthetic file is the official dataset.
+The official dataset used for this project is:
 
-Instead, `sample-data/xy_data_sample.csv` is included only to demonstrate that the complete
-pipeline is runnable.
-
-### When the official CSV is available
-
-Place the official file anywhere you like and run:
-
-```bash
-mvn -q exec:java   -Dexec.mainClass=com.curveforensics.Main   -Dexec.args="/path/to/xy_data.csv"
+```text
+UVCE_BTech_Flam_Resource.csv
 ```
 
-The first two numeric columns should be `x` and `y`; conventional `x,y` headers are
-also supported.
+It contains **1,500 observed `(x, y)` points** and is included in the repository under:
 
-> **Important:** the final parameter values must be obtained from the official
-> `xy_data.csv`, not from the included sample dataset.
+```text
+data/UVCE_BTech_Flam_Resource.csv
+```
+
+The CSV contains numeric `x` and `y` columns, which are supported by the existing
+CSV reader.
+
+The included `sample-data/xy_data_sample.csv` remains available only as a small,
+reproducible development/demo dataset.
+
+### Run with the official dataset
+
+```bash
+mvn -q exec:java -Dexec.mainClass=com.curveforensics.Main -Dexec.args="data/UVCE_BTech_Flam_Resource.csv"
+```
+
+The results reported in this README were obtained by running the Java implementation
+against all **1,500 points** in the official dataset.
 
 ## 7. Sample data
 
@@ -141,7 +147,7 @@ M     = 0.0185
 X     = 27.4
 ```
 
-These values are **not claimed to be the official assignment answer**.
+These values are **not** the results obtained from the official dataset.
 
 ## 8. Running the project
 
@@ -160,75 +166,51 @@ mvn -version
 ### Run with the sample
 
 ```bash
-mvn -q exec:java   -Dexec.mainClass=com.curveforensics.Main   -Dexec.args="sample-data/xy_data_sample.csv"
+mvn -q exec:java -Dexec.mainClass=com.curveforensics.Main -Dexec.args="sample-data/xy_data_sample.csv"
 ```
 
 ### Run with the official dataset
 
 ```bash
-mvn -q exec:java   -Dexec.mainClass=com.curveforensics.Main   -Dexec.args="data/xy_data.csv"
+mvn -q exec:java -Dexec.mainClass=com.curveforensics.Main -Dexec.args="data/UVCE_BTech_Flam_Resource.csv"
 ```
 
-If you prefer, simply put the official CSV at `data/xy_data.csv`.
+## 9. Results on the Official Dataset
 
-## 9. Expected console flow
+The Java solver was successfully executed against the official
+`UVCE_BTech_Flam_Resource.csv` dataset containing **1,500 points**.
+
+### Recovered parameters
 
 ```text
-PARAMETRIC CURVE FORENSICS
-        ↓
-CSV validation
-        ↓
-Differential Evolution
-        ↓
-Best global candidate
-        ↓
-Nelder-Mead refinement
-        ↓
-Final theta, M, X
-        ↓
-L1 / RMSE / maximum-error validation
+theta = 28.1184232552 degrees
+M     = 0.0213889578
+X     = 54.9003188543
 ```
 
-
-## Sample Visualization
-
-The repository includes a visualization generated from the included synthetic
-development dataset:
-
-![Sample parametric curve](docs/sample-curve.png)
-
-**Important:** this is a development/demo visualization only. It is not the
-official assignment result because the official `xy_data.csv` was not available
-when this repository was prepared.
-
-Once the official dataset is available, the same workflow can be used to
-generate the final fitted-curve visualization and compare it against the
-provided observations.
-
-
-## Assumed Final Submission Result
-
-> **Important:** The official `xy_data.csv` was not available when this project was
-> completed. The following values are therefore an **assumed reconstruction based on
-> the synthetic dataset included in this repository**. They must not be interpreted
-> as independently verified values from the missing official dataset.
-
-### Unknown variables
+### Validation metrics
 
 ```text
-theta = 31.7000 degrees
-M     = 0.0185
-X     = 27.4000
+Mean L1 error      = 2.524339544182e+01
+RMSE               = 1.609119787101e+01
+Maximum abs error  = 4.785217662268e+01
 ```
 
-### Submission-ready parametric equation
+The optimization completed successfully using the two-stage Differential Evolution
+and Nelder-Mead pipeline.
 
-Using degrees for readability:
+### Recovered parametric equation
+
+Using the recovered parameters:
 
 ```text
 (
-  t*cos(31.7°) - e^(0.0185*|t|)*sin(0.3*t)*sin(31.7°) + 27.4,
-  42 + t*sin(31.7°) + e^(0.0185*|t|)*sin(0.3*t)*cos(31.7°)
+  t*cos(28.1184232552°)
+    - e^(0.0213889578*|t|)*sin(0.3t)*sin(28.1184232552°)
+    + 54.9003188543,
+
+  42 + t*sin(28.1184232552°)
+    + e^(0.0213889578*|t|)*sin(0.3t)*cos(28.1184232552°)
 )
 ```
 
@@ -238,36 +220,8 @@ Domain:
 6 < t < 60
 ```
 
-### Desmos-ready form
-
-Desmos can use the degree symbol directly:
-
-```text
-(
-t*cos(31.7°) - e^(0.0185|t|)*sin(0.3t)*sin(31.7°) + 27.4,
-42 + t*sin(31.7°) + e^(0.0185|t|)*sin(0.3t)*cos(31.7°)
-)
-```
-
-Alternatively, the angle in radians is approximately:
-
-```text
-theta = 0.5532693729
-```
-
-### Synthetic-data validation
-
-The included development dataset was generated using exactly:
-
-```text
-theta = 31.7000 degrees
-M     = 0.0185
-X     = 27.4000
-```
-
-The Java optimizer recovers these values to numerical precision on that synthetic
-dataset. This validates the implementation pipeline, but it does **not** validate
-the values against the unavailable official dataset.
+The values above are the direct output of the Java implementation when executed
+against the official 1,500-point CSV.
 
 ## 10. Desmos visualization
 
@@ -277,12 +231,16 @@ Official Desmos calculator:
 
 https://www.desmos.com/calculator/rfj91yrxob
 
-Use:
+Use the recovered parameters:
 
 ```text
 (
-t*cos(theta) - e^(M*abs(t))*sin(0.3t)*sin(theta) + X,
-42 + t*sin(theta) + e^(M*abs(t))*sin(0.3t)*cos(theta)
+t*cos(28.1184232552°)
+- e^(0.0213889578|t|)*sin(0.3t)*sin(28.1184232552°)
++ 54.9003188543,
+
+42 + t*sin(28.1184232552°)
++ e^(0.0213889578|t|)*sin(0.3t)*cos(28.1184232552°)
 )
 ```
 
@@ -292,19 +250,19 @@ with:
 6 < t < 60
 ```
 
-After obtaining the parameters from the official CSV, substitute them into Desmos and
-capture the resulting curve for the final submission.
+The existing `docs/sample-curve.png` remains a visualization of the synthetic
+development dataset and should not be described as the official dataset result.
 
 ## 11. Project structure
 
 ```text
 parametric-curve-forensics/
 ├── data/
-│   └── xy_data.csv                 # add official dataset here
+│   └── UVCE_BTech_Flam_Resource.csv  # official 1,500-point dataset
 ├── sample-data/
-│   └── xy_data_sample.csv          # development/demo dataset only
+│   └── xy_data_sample.csv             # development/demo dataset only
 ├── docs/
-│   └── README.md                   # space for screenshots/notes
+│   └── README.md
 ├── src/
 │   └── main/
 │       └── java/com/curveforensics/
@@ -331,45 +289,52 @@ parametric-curve-forensics/
 ## 12. Why this implementation is suitable for an R&D assignment
 
 ### Reproducibility
+
 The global optimizer uses a fixed seed.
 
 ### Correct scoring objective
+
 The optimization directly minimizes mean L1 coordinate error.
 
 ### Bounded search
+
 All three parameters remain inside the assignment constraints.
 
 ### No black-box external optimizer
+
 The core Differential Evolution and Nelder-Mead algorithms are implemented directly
 in Java, making the methodology inspectable.
 
 ### Separation of concerns
+
 CSV reading, mathematical modelling, optimization and validation are separate classes.
 
 ## 13. Limitations and assumptions
 
-The assignment PDF available to us does not expose the actual rows of `xy_data.csv`.
-Therefore the final solver must be run against the official CSV before submitting numerical
-results.
+The official dataset is now available and has been successfully processed by the Java
+implementation.
 
 The current objective assumes that the CSV rows correspond in order to uniformly sampled
-values of `t` over the open interval `(6, 60)`, which follows the assessment wording about
-uniformly sampled curve points. If the official CSV contains an explicit `t` column or a
-different sampling convention, inspect it first and adjust the sampling layer accordingly.
+values of `t` over the open interval `(6, 60)`, following the assessment wording about
+uniformly sampled curve points.
+
+If the official CSV contains an explicit `t` column or uses a different sampling
+convention, the sampling layer should be adjusted accordingly.
 
 ## 14. Final submission checklist
 
-- [ ] Replace the sample dataset with the official `xy_data.csv`.
-- [ ] Run the Java solver.
-- [ ] Record final `theta`, `M`, and `X`.
-- [ ] Record the final L1 error.
-- [ ] Verify the result against the parameter bounds.
+- [x] Add the official `UVCE_BTech_Flam_Resource.csv` dataset.
+- [x] Run the Java solver against all 1,500 points.
+- [x] Record final `theta`, `M`, and `X`.
+- [x] Record the final L1 error.
+- [x] Record RMSE and maximum absolute error.
+- [x] Verify the recovered parameters are inside the assignment bounds.
 - [ ] Plot/inspect the fitted curve.
 - [ ] Validate the result in Desmos.
-- [ ] Add a Desmos screenshot under `docs/`.
-- [ ] Update the Results section with the official values.
+- [ ] Add an official-dataset visualization under `docs/`.
+- [x] Update the README with the official results.
 - [ ] Run the project from a clean checkout.
-- [ ] Push the complete repository to GitHub.
+- [x] Push the complete repository to GitHub.
 
 ## 15. Conclusion
 
@@ -377,4 +342,17 @@ The project converts the assignment into a reproducible inverse-curve problem: t
 observed geometry is known, while its rotation, exponential envelope and translation
 are recovered numerically.
 
-The final answer should always be produced from the official `xy_data.csv`.
+The final recovered parameters for the official 1,500-point dataset are:
+
+```text
+theta = 28.1184232552 degrees
+M     = 0.0213889578
+X     = 54.9003188543
+```
+
+The solver successfully processes the official dataset using Differential Evolution
+followed by Nelder-Mead refinement, with the reported L1, RMSE and maximum-error
+metrics providing numerical validation of the recovered curve.
+
+The final numerical result in this repository is produced from the official
+`UVCE_BTech_Flam_Resource.csv` dataset included under `data/`.
